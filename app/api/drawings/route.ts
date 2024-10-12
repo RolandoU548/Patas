@@ -14,8 +14,26 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+  if (body.id == "") {
+    return NextResponse.json(
+      { message: "'id' cannot be an empty string." },
+      { status: 400 }
+    );
+  }
+  if (body.id) {
+    const existingDrawing = await prisma.drawing.findUnique({
+      where: { id: body.id },
+    });
+    if (existingDrawing) {
+      return NextResponse.json(
+        { message: "The provided 'id' already exists." },
+        { status: 400 }
+      );
+    }
+  }
+
   const result = await prisma.drawing.create({
-    data: body,
+    data: { ...body },
   });
   return NextResponse.json(result, { status: 201 });
 }

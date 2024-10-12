@@ -14,7 +14,7 @@ import {
 import { buttonVariants } from "./ui/button";
 
 interface Drawing {
-  id: number;
+  id: string;
   title: string;
   description: string | null;
   imageUrl: string;

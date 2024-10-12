@@ -2,6 +2,8 @@
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { uploadFile } from "@/firebase/config";
+import { deleteFile } from "@/firebase/config";
+import { v4 as uuidv4 } from "uuid";
 
 export const getDrawings = async () => {
   const result = await prisma.drawing.findMany();
@@ -9,6 +11,7 @@ export const getDrawings = async () => {
 };
 
 export const createDrawing = async (formData: FormData) => {
+  const id = uuidv4();
   const title = formData.get("title")?.toString();
   const description = formData.get("description")?.toString();
   const image = formData.get("image") as File;
@@ -18,20 +21,20 @@ export const createDrawing = async (formData: FormData) => {
   }
   let imageUrl;
   try {
-    imageUrl = await uploadFile(image);
+    imageUrl = await uploadFile(image, `drawings/${id}`);
   } catch (error) {
     console.error(error);
     return;
   }
 
   const result = await prisma.drawing.create({
-    data: { title, description, imageUrl },
+    data: { id, title, description, imageUrl },
   });
   console.log(result);
   redirect("/");
 };
 
-export const deleteDrawing = async (id: number) => {
+export const deleteDrawing = async (id: string) => {
   const drawing = await prisma.drawing.findUnique({
     where: {
       id,
@@ -43,5 +46,11 @@ export const deleteDrawing = async (id: number) => {
         id,
       },
     });
+    try {
+      await deleteFile(`drawings/${id}`);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
   }
 };

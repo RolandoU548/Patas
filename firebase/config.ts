@@ -7,7 +7,6 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -22,13 +21,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app);
 
-export async function uploadFile(file: File) {
-  const storageRef = ref(storage, `drawings/${uuidv4()}`);
+export async function uploadFile(file: File, id: string) {
+  const storageRef = ref(storage, id);
   await uploadBytes(storageRef, file);
   return await getDownloadURL(storageRef);
 }
 
-export async function deleteFile(reference: string) {
-  const storageRef = ref(storage, reference);
+export async function deleteFile(id: string) {
+  const storageRef = ref(storage, id);
   return await deleteObject(storageRef);
 }

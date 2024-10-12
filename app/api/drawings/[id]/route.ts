@@ -7,7 +7,7 @@ export async function GET(
 ) {
   const { id } = params;
   const drawing = await prisma.drawing.findUnique({
-    where: { id: Number(id) },
+    where: { id },
   });
   return NextResponse.json(drawing);
 }
@@ -20,13 +20,13 @@ export async function PUT(
   const body = await request.json();
   const drawing = await prisma.drawing.findUnique({
     where: {
-      id: Number(id),
+      id,
     },
   });
   if (drawing) {
     const updateDrawing = await prisma.drawing.update({
       where: {
-        id: Number(id),
+        id,
       },
       data: body,
     });
@@ -45,13 +45,13 @@ export async function DELETE(
   const { id } = params;
   const drawing = await prisma.drawing.findUnique({
     where: {
-      id: Number(id),
+      id,
     },
   });
   if (drawing) {
     const deletedDrawing = await prisma.drawing.delete({
       where: {
-        id: Number(id),
+        id,
       },
     });
     return NextResponse.json(deletedDrawing);
