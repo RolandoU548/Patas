@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
-import { getDrawings } from "@/actions/drawings/drawings";
-import { DrawingCard } from "@/components/DrawingCard";
+import { Counter } from "@/components/Counter";
+import { DrawingsGrid } from "@/components/DrawingsGrid";
+import { Suspense } from "react";
+import Loading from "./loading";
 
-export default async function Home() {
-  const drawings = await getDrawings();
+export default function Home() {
   return (
     <>
       <h2 className="text-4xl font-bold">Mis Dibujos</h2>
@@ -12,11 +13,10 @@ export default async function Home() {
         Subir nuevo dibujo
       </Link>
       <Link href="/prueba">La prueba</Link>
-      <main className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {drawings.map((drawing) => {
-          return <DrawingCard key={drawing.id} drawing={drawing} />;
-        })}
-      </main>
+      <Counter />
+      <Suspense fallback={<Loading className="mt-2 justify-center"></Loading>}>
+        <DrawingsGrid className="mt-10" />
+      </Suspense>
     </>
   );
 }

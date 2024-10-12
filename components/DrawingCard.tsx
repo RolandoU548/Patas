@@ -24,7 +24,7 @@ interface DrawingCardProps {
   drawing: Drawing;
 }
 
-export const DrawingCard: React.FC<DrawingCardProps> = ({ drawing }) => {
+export const DrawingCard = ({ drawing }: DrawingCardProps) => {
   return (
     <Card key={drawing.id} className="flex flex-col justify-between">
       <CardContent className="pt-4 px-4 pb-0 h-48">
