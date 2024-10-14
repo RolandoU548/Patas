@@ -9,6 +9,9 @@ export async function GET(
   const drawing = await prisma.drawing.findUnique({
     where: { id },
   });
+  if (!drawing) {
+    return NextResponse.json({ message: "Drawing not found" }, { status: 404 });
+  }
   return NextResponse.json(drawing);
 }
 
@@ -22,16 +25,13 @@ export async function DELETE(
       id,
     },
   });
-  if (drawing) {
-    const deletedDrawing = await prisma.drawing.delete({
-      where: {
-        id,
-      },
-    });
-    return NextResponse.json(deletedDrawing);
+  if (!drawing) {
+    return NextResponse.json({ message: "Drawing not found" }, { status: 404 });
   }
-  return NextResponse.json(
-    { message: "Drawing doesn't exist" },
-    { status: 404 }
-  );
+  const deletedDrawing = await prisma.drawing.delete({
+    where: {
+      id,
+    },
+  });
+  return NextResponse.json(deletedDrawing);
 }

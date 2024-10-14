@@ -54,8 +54,5 @@ export async function PUT(request: Request) {
     });
     return NextResponse.json(updatedDrawing);
   }
-  return NextResponse.json(
-    { message: "Drawing doesn't exist" },
-    { status: 404 }
-  );
+  return NextResponse.json({ message: "Drawing not found" }, { status: 404 });
 }
