@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
-import { deleteDrawing } from "@/actions/drawings/drawings";
+import type { Drawing } from "@/types";
 import {
   Card,
   CardContent,
@@ -11,28 +10,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "./ui/button";
 import { buttonVariants } from "./ui/button";
+import { useDeleteDrawingMutation } from "@/lib/services/drawingApi";
+import { deleteDrawingFromFirebase } from "@/lib/utils";
 
-interface Drawing {
-  id: string;
-  title: string;
-  description: string | null;
-  imageUrl: string;
-}
+export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
+  const [deleteDrawing] = useDeleteDrawingMutation();
 
-interface DrawingCardProps {
-  drawing: Drawing;
-}
-
-export const DrawingCard = ({ drawing }: DrawingCardProps) => {
   return (
     <Card key={drawing.id} className="flex flex-col justify-between">
       <CardContent className="pt-4 px-4 pb-0 h-48">
         <Image
           className="rounded w-full h-full object-cover"
           priority
-          width={100}
-          height={100}
+          width={700}
+          height={500}
           src={drawing.imageUrl}
           alt={`drawing${drawing.id}`}
         />
@@ -53,6 +46,7 @@ export const DrawingCard = ({ drawing }: DrawingCardProps) => {
           variant={"destructive"}
           onClick={() => {
             deleteDrawing(drawing.id);
+            deleteDrawingFromFirebase(drawing.id);
           }}
         >
           BORRAR

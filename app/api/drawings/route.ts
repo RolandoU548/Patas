@@ -37,3 +37,25 @@ export async function POST(request: Request) {
   });
   return NextResponse.json(result, { status: 201 });
 }
+
+export async function PUT(request: Request) {
+  const body = await request.json();
+  const drawing = await prisma.drawing.findUnique({
+    where: {
+      id: body.id,
+    },
+  });
+  if (drawing) {
+    const updatedDrawing = await prisma.drawing.update({
+      where: {
+        id: body.id,
+      },
+      data: body,
+    });
+    return NextResponse.json(updatedDrawing);
+  }
+  return NextResponse.json(
+    { message: "Drawing doesn't exist" },
+    { status: 404 }
+  );
+}
