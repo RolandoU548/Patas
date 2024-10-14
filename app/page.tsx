@@ -9,7 +9,6 @@ export default function Home() {
       <Link href="/new" className={`mt-5 ${buttonVariants()}`}>
         Subir nuevo dibujo
       </Link>
-      <Link href="/prueba">La prueba</Link>
       <DrawingsGrid className="mt-5" />
     </>
   );
