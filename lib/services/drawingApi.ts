@@ -5,7 +5,7 @@ type UpdatedDrawing = Pick<Drawing, "id"> & Partial<Omit<Drawing, "id">>;
 
 export const drawingApi = createApi({
   reducerPath: "drawingApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/api" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
 
   keepUnusedDataFor: 120,
   refetchOnMountOrArgChange: true,
