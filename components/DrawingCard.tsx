@@ -10,15 +10,32 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { buttonVariants } from "./ui/button";
 import { useDeleteDrawingMutation } from "@/lib/services/drawingApi";
 import { deleteDrawingFromFirebase } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
+  const [pending, setPending] = useState(false);
   const [deleteDrawing] = useDeleteDrawingMutation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setPending(true);
+    try {
+      await Promise.all([
+        deleteDrawing(drawing.id),
+        deleteDrawingFromFirebase(drawing.id),
+      ]);
+    } catch (error) {
+      console.error("Error al eliminar el dibujo:", error);
+    } finally {
+      setPending(false);
+    }
+  };
 
   return (
     <>
@@ -62,18 +79,25 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
           </CardDescription>
         </CardHeader>
         <CardFooter className="pb-4 flex justify-between">
-          <Link href="edit" className={buttonVariants()}>
+          <Link
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            href="edit"
+            className={buttonVariants()}
+          >
             Editar
           </Link>
-          <Button
-            variant={"destructive"}
-            onClick={() => {
-              deleteDrawing(drawing.id);
-              deleteDrawingFromFirebase(drawing.id);
-            }}
-          >
-            BORRAR
-          </Button>
+          {pending ? (
+            <Button disabled variant={"destructive"}>
+              <Loader2 className="mr-2 animate-spin" />
+              Borrando...
+            </Button>
+          ) : (
+            <Button variant={"destructive"} onClick={handleDelete}>
+              Borrar
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </>

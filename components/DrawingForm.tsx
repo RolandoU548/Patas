@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -18,7 +19,6 @@ import { v4 as uuidv4 } from "uuid";
 import { useCreateDrawingMutation } from "@/lib/services/drawingApi";
 import { uploadDrawingToFirebase } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-
 interface FormData {
   title: string;
   description: string;
@@ -31,12 +31,14 @@ export default function DrawingForm() {
     description: "",
     image: null,
   });
+  const [formPending, setFormPending] = useState(false);
   const router = useRouter();
 
   const [createDrawing] = useCreateDrawingMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setFormPending(true);
     const id = uuidv4();
     if (!formData.title || !formData.image) {
       console.log("Title and Image are required");
@@ -54,6 +56,8 @@ export default function DrawingForm() {
     } catch (error) {
       console.error(error);
       return;
+    } finally {
+      setFormPending(false);
     }
   };
 
@@ -119,7 +123,14 @@ export default function DrawingForm() {
           <Link href="/" className={buttonVariants({ variant: "outline" })}>
             Volver
           </Link>
-          <Button type="submit">Siguiente</Button>
+          {formPending ? (
+            <Button disabled>
+              <Loader className="mr-2 animate-spin" />
+              Subiendo...
+            </Button>
+          ) : (
+            <Button type="submit">Siguiente</Button>
+          )}
         </CardFooter>
       </Card>
     </form>
