@@ -75,7 +75,7 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
           />
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50">
             <Image
-              className="rounded max-h-[90dvh] max-w-[90vw] w-auto object-contain"
+              className="rounded max-h-[90dvh] max-w-[90vw] w-auto object-contain outline-double outline-4 outline-offset-4 outline-primary"
               src={drawing.imageUrl}
               alt="dibujo"
               width={600}
