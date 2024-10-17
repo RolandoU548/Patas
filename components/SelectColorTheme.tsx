@@ -38,7 +38,7 @@ export const SelectColorTheme = () => {
         setCurrentTheme(e);
       }}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-fit px-5 md:w-48">
         <SelectValue placeholder="Tema" />
       </SelectTrigger>
       <SelectContent>
