@@ -134,16 +134,16 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
                   </AlertDialogTitle>
                   <AlertDialogDescription>
                     Esta acción no se puede deshacer. Eliminará permanentemente
-                    el dibujo y sus datos
+                    el dibujo y sus datos.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-destructive"
                     onClick={handleDelete}
                   >
-                    Continue
+                    Eliminar
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

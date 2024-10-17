@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ModeToggle } from "./mode-toggle";
 import { Merienda } from "next/font/google";
+import { SelectColorTheme } from "./SelectColorTheme";
 
 const merienda = Merienda({
   subsets: ["latin"],
@@ -17,7 +18,10 @@ export const Navbar = () => {
         >
           Patas
         </Link>
-        <ModeToggle />
+        <div className="flex gap-5">
+          <SelectColorTheme />
+          <ModeToggle />
+        </div>
       </div>
       <hr />
     </>
