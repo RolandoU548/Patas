@@ -90,8 +90,8 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
             className="rounded w-full h-full object-cover"
             onClick={() => setIsOpen(true)}
             priority
-            width={700}
-            height={500}
+            width={100}
+            height={100}
             src={drawing.imageUrl}
             alt={`drawing${drawing.id}`}
           />
@@ -105,10 +105,11 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
           </CardDescription>
         </CardHeader>
         <CardFooter className="pb-4 flex justify-between flex-wrap">
-          <Link href="edit" className={buttonVariants()}>
+          <Link aria-label="Editar" href="edit" className={buttonVariants()}>
             <FaEdit />
           </Link>
           <Button
+            aria-label="Descargar"
             onClick={() => {
               handleDownload(drawing.imageUrl, drawing.title);
             }}
@@ -122,7 +123,7 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
           ) : (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant={"destructive"}>
+                <Button variant={"destructive"} aria-label="Borrar">
                   <FaTrash />
                 </Button>
               </AlertDialogTrigger>
