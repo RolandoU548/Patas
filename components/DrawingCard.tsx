@@ -77,9 +77,9 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
             <Image
               className="rounded max-h-[90dvh] max-w-[90vw] w-auto object-contain outline-double outline-4 outline-offset-4 outline-primary"
               src={drawing.imageUrl}
-              alt="dibujo"
-              width={600}
-              height={600}
+              alt={drawing.title}
+              width={400}
+              height={400}
             />
           </div>
         </>
@@ -87,13 +87,13 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
       <Card className="flex flex-col justify-between cursor-pointer hover:shadow-dark transition duration-300">
         <CardContent className="pt-4 px-4 pb-0 h-48">
           <Image
-            className="rounded w-full h-full object-cover"
+            className="rounded w-full h-full object-cover hover:scale-105 transition duration-300"
             onClick={() => setIsOpen(true)}
             priority
             width={100}
             height={100}
             src={drawing.imageUrl}
-            alt={`drawing${drawing.id}`}
+            alt={drawing.title}
           />
         </CardContent>
         <CardHeader className="py-2">
@@ -105,7 +105,11 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
           </CardDescription>
         </CardHeader>
         <CardFooter className="pb-4 flex justify-between flex-wrap">
-          <Link aria-label="Editar" href="edit" className={buttonVariants()}>
+          <Link
+            aria-label="Editar"
+            href={`edit/${drawing.id}`}
+            className={buttonVariants()}
+          >
             <FaEdit />
           </Link>
           <Button

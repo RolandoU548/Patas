@@ -46,7 +46,7 @@ export const DrawingsGrid = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={() => location.reload()}>
               Intentar de nuevo
             </AlertDialogAction>
