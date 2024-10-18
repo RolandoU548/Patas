@@ -84,10 +84,10 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
           </div>
         </>
       )}
-      <Card className="flex flex-col justify-between cursor-pointer hover:shadow-dark transition duration-300">
+      <Card className="flex flex-col justify-between hover:shadow-dark transition duration-300">
         <CardContent className="pt-4 px-4 pb-0 h-48">
           <Image
-            className="rounded w-full h-full object-cover hover:scale-105 transition duration-300"
+            className="rounded w-full h-full object-cover hover:scale-105 transition duration-300 cursor-pointer"
             onClick={() => setIsOpen(true)}
             priority
             width={100}
