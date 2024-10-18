@@ -125,7 +125,7 @@ export const SpecificDrawing = () => {
   if (drawing)
     return (
       <form onSubmit={handleSubmit}>
-        <Card className="max-w-3xl mx-auto shadow-none border-0">
+        <Card className="max-w-3xl mx-auto shadow-none border-0 bg-inherit">
           <CardHeader className="pt-0">
             <CardTitle className="text-3xl">Editar Dibujo</CardTitle>
             <CardDescription>
