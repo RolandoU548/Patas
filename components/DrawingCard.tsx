@@ -140,7 +140,7 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
-                    className="bg-destructive"
+                    className="bg-destructive text-destructive-foreground"
                     onClick={handleDelete}
                   >
                     Eliminar
