@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface theme {
   name: string;
@@ -14,6 +14,8 @@ interface theme {
 }
 
 export const SelectColorTheme = () => {
+  const initialColorTheme = "theme-rose";
+
   const themes: theme[] = [
     { name: "Rosa", value: "theme-rose" },
     { name: "Azul", value: "theme-blue" },
@@ -26,16 +28,28 @@ export const SelectColorTheme = () => {
     { name: "Rojo", value: "theme-red" },
   ];
 
-  const [currentTheme, setCurrentTheme] = useState<string>("theme-rose");
+  const [currentTheme, setCurrentTheme] = useState<string>(initialColorTheme);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("colorTheme");
+    if (savedTheme) {
+      const body = document.querySelector("body");
+      body?.classList.remove(initialColorTheme);
+      body?.classList.add(savedTheme);
+      setCurrentTheme(savedTheme);
+    }
+  }, []);
 
   return (
     <Select
       name="color"
+      value={currentTheme}
       onValueChange={(e) => {
         const body = document.querySelector("body");
         body?.classList.remove(currentTheme);
         body?.classList.add(e);
         setCurrentTheme(e);
+        localStorage.setItem("colorTheme", e);
       }}
     >
       <SelectTrigger className="w-fit px-5 md:w-48">
