@@ -55,7 +55,6 @@ export default function DrawingForm() {
       router.push("/");
     } catch (error) {
       console.error(error);
-      return;
     } finally {
       setFormPending(false);
     }
@@ -88,6 +87,7 @@ export default function DrawingForm() {
                 name="title"
                 id="title"
                 required
+                maxLength={200}
                 placeholder="Título del dibujo"
                 onChange={handleChange}
               />
@@ -98,6 +98,7 @@ export default function DrawingForm() {
                 className="p-3"
                 name="description"
                 id="description"
+                maxLength={400}
                 placeholder="Descripción opcional"
                 onChange={handleChange}
               />
@@ -129,7 +130,7 @@ export default function DrawingForm() {
               Subiendo...
             </Button>
           ) : (
-            <Button type="submit">Siguiente</Button>
+            <Button type="submit">Subir</Button>
           )}
         </CardFooter>
       </Card>

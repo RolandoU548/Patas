@@ -8,7 +8,6 @@ export const drawingApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
 
   keepUnusedDataFor: 120,
-  refetchOnMountOrArgChange: true,
   refetchOnReconnect: true,
 
   tagTypes: ["Drawings"],
