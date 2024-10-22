@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { StoreProvider } from "@/components/StoreProvider";
 import { Navbar } from "@/components/Navbar";
 import localFont from "next/font/local";
+import { DEFAULT_COLOR_THEME } from "@/lib/constants";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -29,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased theme-rose`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased ${DEFAULT_COLOR_THEME}`}
       >
         <ThemeProvider
           attribute="class"
