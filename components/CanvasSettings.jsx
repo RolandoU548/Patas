@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { Button } from "./ui/button";
 
 export const CanvasSettings = ({ canvas }) => {
@@ -10,6 +11,7 @@ export const CanvasSettings = ({ canvas }) => {
   const [color, setColor] = useState("#000000");
   const [stroke, setStroke] = useState("#ffffff");
   const [strokeWidth, setStrokeWidth] = useState(0);
+  const [opacity, setOpacity] = useState(100);
 
   useEffect(() => {
     if (canvas) {
@@ -34,13 +36,18 @@ export const CanvasSettings = ({ canvas }) => {
         handleObjectSelection(event.target);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canvas]);
 
   const handleObjectSelection = (object) => {
     if (!object) return;
     setSelectedObject(object);
 
+    if (object.opacity) {
+      setOpacity(object.opacity * 100);
+    }
+    if (object.fill) {
+      setColor(object.fill);
+    }
     if (object.stroke) {
       setStroke(object.stroke);
       setStrokeWidth(object.strokeWidth);
@@ -48,11 +55,9 @@ export const CanvasSettings = ({ canvas }) => {
     if (object.type === "rect" || object.type === "triangle") {
       setWidth(Math.round(object.width * object.scaleX));
       setHeight(Math.round(object.height * object.scaleY));
-      setColor(object.fill);
     } else if (object.type === "ellipse") {
       setWidth(Math.round(object.rx * 2 * object.scaleX));
       setHeight(Math.round(object.ry * 2 * object.scaleY));
-      setColor(object.fill);
     }
   };
 
@@ -62,6 +67,7 @@ export const CanvasSettings = ({ canvas }) => {
     setColor("#000000");
     setStroke("#ffffff");
     setStrokeWidth(0);
+    setOpacity(100);
   };
 
   const handleWidthChange = (e) => {
@@ -102,11 +108,6 @@ export const CanvasSettings = ({ canvas }) => {
     canvas.renderAll();
   };
 
-  const handleDelete = () => {
-    canvas.remove(selectedObject);
-    clearSettings();
-  };
-
   const handleRxChange = (e) => {
     const value = e.target.value.replace(/,/g, "");
     const intValue = parseInt(value, 10);
@@ -123,9 +124,21 @@ export const CanvasSettings = ({ canvas }) => {
     canvas.renderAll();
   };
 
+  const handleOpacityChange = (value) => {
+    const intValue = parseInt(value, 10);
+    setOpacity(intValue);
+    selectedObject.set({ opacity: intValue / 100 });
+    canvas.renderAll();
+  };
+
+  const handleDelete = () => {
+    canvas.remove(selectedObject);
+    clearSettings();
+  };
+
   if (selectedObject)
     return (
-      <section className="fixed right-4 -translate-y-1/2 top-1/2 gap-2 flex flex-col p-2 rounded-lg text-left bg-primary empty:p-0">
+      <section className="fixed right-4 -translate-y-1/2 top-1/2 gap-2 flex flex-col p-2 text-left bg-primary empty:p-0">
         {(selectedObject.type === "rect" ||
           selectedObject.type === "triangle") && (
           <>
@@ -216,6 +229,16 @@ export const CanvasSettings = ({ canvas }) => {
             />
           </>
         )}
+        <Label className="text-primary-foreground" htmlFor="opacity">
+          Opacidad
+        </Label>
+        <Slider
+          className="back"
+          value={[opacity, 100]}
+          defaultValue={[100]}
+          max={100}
+          onValueChange={(value) => handleOpacityChange(value)}
+        />
         <Button onClick={handleDelete} variant={"destructive"}>
           Eliminar
         </Button>
