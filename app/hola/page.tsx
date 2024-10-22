@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, ReactNode } from "react";
 import { Canvas, Rect, Triangle, Ellipse } from "fabric";
 import { Button } from "@/components/ui/button";
 import { FaRegSquare, FaRegCircle } from "react-icons/fa";
@@ -41,10 +41,26 @@ const App = () => {
     }
   }, []);
 
-  const shapes = [
+  interface ShapeProperties {
+    top: number;
+    left: number;
+    width?: number;
+    height?: number;
+    rx?: number;
+    ry?: number;
+    fill: string;
+  }
+
+  interface Shape {
+    constructor: new (properties: ShapeProperties) => Rect | Triangle | Ellipse;
+    icon: ReactNode;
+    properties: ShapeProperties;
+  }
+
+  const shapes: Shape[] = [
     {
       constructor: Rect,
-      icon: FaRegSquare,
+      icon: <FaRegSquare />,
       properties: {
         top: canvasHeight / 2 - rectangleHeight / 2,
         left: canvasWidth / 2 - rectangleWidth / 2,
@@ -55,7 +71,7 @@ const App = () => {
     },
     {
       constructor: Triangle,
-      icon: FiTriangle,
+      icon: <FiTriangle />,
       properties: {
         top: canvasHeight / 2 - triangleHeight / 2,
         left: canvasWidth / 2 - triangleWidth / 2,
@@ -66,7 +82,7 @@ const App = () => {
     },
     {
       constructor: Ellipse,
-      icon: FaRegCircle,
+      icon: <FaRegCircle />,
       properties: {
         top: canvasHeight / 2 - ellipseHeight / 2,
         left: canvasWidth / 2 - ellipseWidth / 2,
@@ -93,7 +109,7 @@ const App = () => {
               }}
               variant={"ghost"}
             >
-              {<shape.icon />}
+              {shape.icon}
             </Button>
           );
         })}
