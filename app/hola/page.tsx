@@ -1,14 +1,20 @@
 "use client";
 import { useRef, useState, useEffect, ReactNode } from "react";
-import { Canvas, Rect, Triangle, Ellipse } from "fabric";
+import { Canvas, Rect, Triangle, Ellipse, Line } from "fabric";
 import { Button } from "@/components/ui/button";
 import { FaRegSquare, FaRegCircle } from "react-icons/fa";
 import { FiTriangle } from "react-icons/fi";
-import { CanvasSettings } from "@/components/CanvasSettings";
+import { ShapeOptions } from "@/components/ShapeOptions";
 import { DEFAULT_CANVAS_COLOR, DEFAULT_SHAPES_COLOR } from "@/lib/constants";
+import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from "@/lib/constants";
+import { CanvasSettings } from "@/components/CanvasSettings";
+import {
+  handleObjectMoving,
+  clearGuideLines,
+} from "@/components/SnappingHelpers";
 
-const canvasWidth = 450;
-const canvasHeight = 450;
+const canvasWidth = DEFAULT_CANVAS_WIDTH;
+const canvasHeight = DEFAULT_CANVAS_HEIGHT;
 
 const rectangleHeight = 100;
 const rectangleWidth = 100;
@@ -21,8 +27,9 @@ const ellipseHeight = 100;
 
 const App = () => {
   const canvasRef = useRef(null);
-
   const [canvas, setCanvas] = useState<Canvas | null>(null);
+  const [guidelines, setGuideLines] = useState<Line[]>([]);
+
   useEffect(() => {
     if (canvasRef.current) {
       const initCanvas = new Canvas(canvasRef.current, {
@@ -35,10 +42,19 @@ const App = () => {
 
       setCanvas(initCanvas);
 
+      initCanvas.on("object:moving", (event) => {
+        handleObjectMoving(initCanvas, event.target, guidelines, setGuideLines);
+      });
+
+      initCanvas.on("object:modified", () => {
+        clearGuideLines(initCanvas);
+      });
+
       return () => {
         initCanvas.dispose();
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   interface ShapeProperties {
@@ -95,7 +111,7 @@ const App = () => {
 
   return (
     <main className="flex flex-col items-center justify-start">
-      <aside className="text-primary-foreground flex flex-col p-1 gap-1 fixed top-1/2 left-4 -translate-y-1/2 rounded-lg bg-primary">
+      <aside className="text-primary-foreground flex flex-col p-1 gap-1 fixed top-1/2 left-4 -translate-y-1/2 rounded-md bg-primary z-30">
         {shapes.map((shape, index) => {
           return (
             <Button
@@ -114,12 +130,13 @@ const App = () => {
           );
         })}
       </aside>
+      <CanvasSettings canvas={canvas} />
       <canvas
         className="border border-dark rounded"
         id="canvas"
         ref={canvasRef}
       />
-      <CanvasSettings canvas={canvas} />
+      <ShapeOptions canvas={canvas} />
     </main>
   );
 };
