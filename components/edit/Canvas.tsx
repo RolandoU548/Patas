@@ -1,17 +1,17 @@
 "use client";
 import { useRef, useState, useEffect, ReactNode } from "react";
-import { Canvas, Rect, Triangle, Ellipse, Line } from "fabric";
+import { Canvas, Rect, Triangle, Ellipse, Line, FabricImage } from "fabric";
 import { Button } from "@/components/ui/button";
 import { FaRegSquare, FaRegCircle } from "react-icons/fa";
 import { FiTriangle } from "react-icons/fi";
-import { ShapeOptions } from "@/components/ShapeOptions";
 import { DEFAULT_CANVAS_COLOR, DEFAULT_SHAPES_COLOR } from "@/lib/constants";
 import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from "@/lib/constants";
-import { CanvasSettings } from "@/components/CanvasSettings";
+import { ShapeOptions } from "@/components/edit/ShapeOptions";
+import { CanvasSettings } from "@/components/edit/CanvasSettings";
 import {
   handleObjectMoving,
   clearGuideLines,
-} from "@/components/SnappingHelpers";
+} from "@/components/edit/SnappingHelpers";
 
 const canvasWidth = DEFAULT_CANVAS_WIDTH;
 const canvasHeight = DEFAULT_CANVAS_HEIGHT;
@@ -25,10 +25,18 @@ const triangleHeight = 86;
 const ellipseWidth = 100;
 const ellipseHeight = 100;
 
-const App = () => {
+const App = ({ url }: { url: string }) => {
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState<Canvas | null>(null);
   const [guidelines, setGuideLines] = useState<Line[]>([]);
+
+  const addImage = async (canvas: Canvas, url: string) => {
+    const image = await FabricImage.fromURL(url);
+    image.top = canvas.height / 2 - image.height / 2;
+    image.left = canvas.width / 2 - image.width / 2;
+    canvas?.add(image);
+    canvas?.renderAll();
+  };
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -50,6 +58,8 @@ const App = () => {
         clearGuideLines(initCanvas);
       });
 
+      addImage(initCanvas, url);
+
       return () => {
         initCanvas.dispose();
       };
@@ -58,8 +68,8 @@ const App = () => {
   }, []);
 
   interface ShapeProperties {
-    top: number;
-    left: number;
+    top?: number;
+    left?: number;
     width?: number;
     height?: number;
     rx?: number;
@@ -78,8 +88,6 @@ const App = () => {
       constructor: Rect,
       icon: <FaRegSquare />,
       properties: {
-        top: canvasHeight / 2 - rectangleHeight / 2,
-        left: canvasWidth / 2 - rectangleWidth / 2,
         width: rectangleWidth,
         height: rectangleHeight,
         fill: DEFAULT_SHAPES_COLOR,
@@ -89,8 +97,6 @@ const App = () => {
       constructor: Triangle,
       icon: <FiTriangle />,
       properties: {
-        top: canvasHeight / 2 - triangleHeight / 2,
-        left: canvasWidth / 2 - triangleWidth / 2,
         width: triangleWidth,
         height: triangleHeight,
         fill: DEFAULT_SHAPES_COLOR,
@@ -100,8 +106,8 @@ const App = () => {
       constructor: Ellipse,
       icon: <FaRegCircle />,
       properties: {
-        top: canvasHeight / 2 - ellipseHeight / 2,
-        left: canvasWidth / 2 - ellipseWidth / 2,
+        width: ellipseWidth,
+        height: ellipseHeight,
         rx: ellipseWidth / 2,
         ry: ellipseHeight / 2,
         fill: DEFAULT_SHAPES_COLOR,
@@ -110,7 +116,7 @@ const App = () => {
   ];
 
   return (
-    <main className="flex flex-col items-center justify-start">
+    <main className="flex flex-col items-center">
       <aside className="text-primary-foreground flex flex-col p-1 gap-1 fixed top-1/2 left-4 -translate-y-1/2 rounded-md bg-primary z-30">
         {shapes.map((shape, index) => {
           return (
@@ -119,7 +125,11 @@ const App = () => {
               className="w-full hover:bg-white/30 dark:hover:bg-black/30"
               onClick={() => {
                 if (canvas) {
-                  const addedShape = new shape.constructor(shape.properties);
+                  const addedShape = new shape.constructor({
+                    ...shape.properties,
+                    top: canvas.height / 2 - (shape.properties.height ?? 0) / 2,
+                    left: canvas.width / 2 - (shape.properties.width ?? 0) / 2,
+                  });
                   canvas.add(addedShape);
                 }
               }}
@@ -132,11 +142,22 @@ const App = () => {
       </aside>
       <CanvasSettings canvas={canvas} />
       <canvas
-        className="border border-dark rounded"
+        className="w-full mx-auto border border-dark rounded"
         id="canvas"
         ref={canvasRef}
       />
       <ShapeOptions canvas={canvas} />
+      <Button
+        onClick={() => {
+          if (canvas)
+            addImage(
+              canvas,
+              "https://firebasestorage.googleapis.com/v0/b/patas-49960.appspot.com/o/drawings%2Fd3254f2b-8773-44d8-9604-c9ac726db637?alt=media&token=1b93aa6b-da06-4950-8a85-5eb31ded62ef"
+            );
+        }}
+      >
+        AGREGAR
+      </Button>
     </main>
   );
 };

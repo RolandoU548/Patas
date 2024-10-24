@@ -1,5 +1,9 @@
-import { SpecificDrawing } from "@/components/SpecificDrawing";
+import prisma from "@/lib/prisma";
+import CanvasComponent from "@/components/edit/Canvas";
+export default async function App({ params }: { params: { id: string } }) {
+  const { id } = params;
+  const drawing = await prisma.drawing.findFirst({ where: { id } });
 
-export default function editDrawing() {
-  return <SpecificDrawing />;
+  if (drawing?.imageUrl)
+    return <CanvasComponent url={drawing.imageUrl}></CanvasComponent>;
 }

@@ -12,9 +12,9 @@ import {
 import { useGetDrawingByIdQuery } from "@/lib/services/drawingApi";
 import Loading from "@/app/loading";
 import { useParams } from "next/navigation";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/card";
 import { useState } from "react";
 import Link from "next/link";
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
 
