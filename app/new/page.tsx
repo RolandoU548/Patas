@@ -1,4 +1,4 @@
-import DrawingForm from "@/components/DrawingForm";
+import DrawingForm from "@/components/new/DrawingForm";
 
 export default function createDrawing() {
   return (
