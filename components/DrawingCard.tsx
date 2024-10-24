@@ -30,6 +30,7 @@ import { Loader2 } from "lucide-react";
 import { FaTrash } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
+import { FaEye } from "react-icons/fa";
 
 export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
   const [pending, setPending] = useState(false);
@@ -104,7 +105,14 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
             {drawing.description}
           </CardDescription>
         </CardHeader>
-        <CardFooter className="pb-4 flex justify-between flex-wrap">
+        <CardFooter className="pb-4 flex justify-between flex-wrap gap-1">
+          <Link
+            aria-label="Ver"
+            href={`${drawing.id}`}
+            className={buttonVariants()}
+          >
+            <FaEye />
+          </Link>
           <Link
             aria-label="Editar"
             href={`edit/${drawing.id}`}

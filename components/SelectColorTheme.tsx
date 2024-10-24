@@ -7,34 +7,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState, useEffect } from "react";
+import { DEFAULT_COLOR_THEME } from "@/lib/constants";
+import { ColorTheme } from "@/lib/constants";
 
-interface theme {
+interface Theme {
   name: string;
-  value: string;
+  value: ColorTheme;
 }
 
 export const SelectColorTheme = () => {
-  const initialColorTheme = "theme-rose";
-
-  const themes: theme[] = [
-    { name: "Rosa", value: "theme-rose" },
-    { name: "Azul", value: "theme-blue" },
-    { name: "Zinc", value: "theme-zinc" },
-    { name: "Naranja", value: "theme-orange" },
-    { name: "Verde", value: "theme-green" },
-    { name: "Amarillo", value: "theme-yellow" },
-    { name: "Slate", value: "theme-slate" },
-    { name: "Morado", value: "theme-violet" },
-    { name: "Rojo", value: "theme-red" },
+  const themes: Theme[] = [
+    { name: "Rosa", value: ColorTheme.Rose },
+    { name: "Azul", value: ColorTheme.Blue },
+    { name: "Zinc", value: ColorTheme.Zinc },
+    { name: "Naranja", value: ColorTheme.Orange },
+    { name: "Verde", value: ColorTheme.Green },
+    { name: "Amarillo", value: ColorTheme.Yellow },
+    { name: "Slate", value: ColorTheme.Slate },
+    { name: "Morado", value: ColorTheme.Violet },
+    { name: "Rojo", value: ColorTheme.Red },
   ];
 
-  const [currentTheme, setCurrentTheme] = useState<string>(initialColorTheme);
+  const [currentTheme, setCurrentTheme] = useState<string>(DEFAULT_COLOR_THEME);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("colorTheme");
     if (savedTheme) {
       const body = document.querySelector("body");
-      body?.classList.remove(initialColorTheme);
+      body?.classList.remove(DEFAULT_COLOR_THEME);
       body?.classList.add(savedTheme);
       setCurrentTheme(savedTheme);
     }
