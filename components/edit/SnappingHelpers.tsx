@@ -1,5 +1,4 @@
 import { Canvas, FabricObject, Line } from "fabric";
-import { Dispatch, SetStateAction } from "react";
 
 const snappingDistance = 10;
 
@@ -24,12 +23,7 @@ export const clearGuideLines = (canvas: Canvas) => {
   canvas.renderAll();
 };
 
-export const handleObjectMoving = (
-  canvas: Canvas,
-  obj: FabricObject,
-  guideLines: Line[],
-  setGuideLines: Dispatch<SetStateAction<Line[]>>
-) => {
+export const handleObjectMoving = (canvas: Canvas, obj: FabricObject) => {
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
 
@@ -119,10 +113,7 @@ export const handleObjectMoving = (
 
   if (!snapped) {
     clearGuideLines(canvas);
-  } else {
-    setGuideLines(newGuideLines);
   }
-
   canvas.renderAll();
 };
 

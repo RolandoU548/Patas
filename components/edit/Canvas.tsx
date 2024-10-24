@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState, useEffect, ReactNode } from "react";
-import { Canvas, Rect, Triangle, Ellipse, Line, FabricImage } from "fabric";
+import { Canvas, Rect, Triangle, Ellipse, FabricImage } from "fabric";
 import { Button } from "@/components/ui/button";
 import { FaRegSquare, FaRegCircle } from "react-icons/fa";
 import { FiTriangle } from "react-icons/fi";
@@ -28,7 +28,6 @@ const ellipseHeight = 100;
 const App = ({ url }: { url: string }) => {
   const canvasRef = useRef(null);
   const [canvas, setCanvas] = useState<Canvas | null>(null);
-  const [guidelines, setGuideLines] = useState<Line[]>([]);
 
   const addImage = async (canvas: Canvas, url: string) => {
     const image = await FabricImage.fromURL(url);
@@ -51,13 +50,8 @@ const App = ({ url }: { url: string }) => {
       setCanvas(initCanvas);
 
       initCanvas.on("object:moving", (event) => {
-        handleObjectMoving(initCanvas, event.target, guidelines, setGuideLines);
+        handleObjectMoving(initCanvas, event.target);
       });
-
-      initCanvas.on("object:scaling", (event) => {
-        handleObjectMoving(initCanvas, event.target, guidelines, setGuideLines);
-      });
-
       initCanvas.on("object:modified", () => {
         clearGuideLines(initCanvas);
       });
