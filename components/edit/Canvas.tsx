@@ -54,6 +54,10 @@ const App = ({ url }: { url: string }) => {
         handleObjectMoving(initCanvas, event.target, guidelines, setGuideLines);
       });
 
+      initCanvas.on("object:scaling", (event) => {
+        handleObjectMoving(initCanvas, event.target, guidelines, setGuideLines);
+      });
+
       initCanvas.on("object:modified", () => {
         clearGuideLines(initCanvas);
       });
