@@ -58,26 +58,29 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
           />
           <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50">
             <Image
-              className="rounded max-h-[90dvh] max-w-[90vw] w-auto object-contain outline-double outline-4 outline-offset-4 outline-primary"
+              className="rounded min-w-[30vw] max-h-[90dvh] max-w-[90vw] object-contain outline-double outline-4 outline-offset-4 outline-primary w-auto"
               src={drawing.imageUrl}
               alt={drawing.title}
               width={400}
               height={400}
+              priority
             />
           </div>
         </>
       )}
       <Card className="flex flex-col justify-between hover:shadow-dark transition duration-300">
         <CardContent className="pt-4 px-4 pb-0 h-48">
-          <Image
-            className="rounded w-full h-full object-cover hover:scale-105 transition duration-300 cursor-pointer"
-            onClick={() => setIsOpen(true)}
-            priority
-            width={100}
-            height={100}
-            src={drawing.imageUrl}
-            alt={drawing.title}
-          />
+          <div className="relative h-full w-full">
+            <Image
+              className="rounded w-full h-full object-cover hover:scale-105 transition duration-300 cursor-pointer"
+              onClick={() => setIsOpen(true)}
+              priority
+              fill
+              src={drawing.imageUrl}
+              alt={drawing.title}
+              sizes="(max-width: 555px) calc(100vw - 36px), (max-width: 1024px) calc(50vw - 36px), (max-width: 1280px) calc(33vw - 36px), (max-width: 1535px) calc(25vw - 36px), calc(20vw - 36px)"
+            />
+          </div>
         </CardContent>
         <CardHeader className="py-2">
           <CardTitle className="font-semibold text-lg uppercase line-clamp-1 py-0">

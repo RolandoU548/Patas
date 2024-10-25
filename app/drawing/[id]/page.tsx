@@ -1,5 +1,5 @@
 import { getDrawingById } from "@/app/actions";
-import { SpecificDrawing } from "@/components/id/SpecificDrawing";
+import { SpecificDrawing } from "@/components/drawing/id/SpecificDrawing";
 
 export default async function editDrawing({
   params,

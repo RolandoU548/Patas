@@ -28,11 +28,11 @@ export const SpecificDrawing = ({ drawing }: { drawing: Drawing }) => {
       }}
     >
       <Card className="max-w-3xl mx-auto shadow-none border-0 bg-inherit">
-        <CardHeader className="pt-0">
+        <CardHeader className="p-3 md:p-6 pt-0 md:pt-0">
           <CardTitle className="text-3xl">Editar Dibujo</CardTitle>
           <CardDescription>Edita las propiedades de tu dibujo.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-3 md:p-6">
           <main className="flex flex-col gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="title">Título</Label>
@@ -58,14 +58,15 @@ export const SpecificDrawing = ({ drawing }: { drawing: Drawing }) => {
                 placeholder="Descripción"
               />
             </div>
-            <div className="flex flex-col space-y-1.5">
+            <div className="flex flex-col">
               <Image
-                className="rounded max-h-[90dvh] max-w-[90vw] w-auto object-contain"
+                className="border-2 border-primary rounded max-h-[90dvh] max-w-[90vw] w-auto object-contain"
                 priority
                 src={drawing.imageUrl}
                 alt={drawing.title}
-                width={800}
-                height={800}
+                width={768}
+                height={600}
+                sizes="(max-width:768px) calc(100vw - 44px), 768px"
               />
             </div>
           </main>

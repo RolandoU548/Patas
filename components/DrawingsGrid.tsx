@@ -16,7 +16,7 @@ export const DrawingsGrid = async ({
   return (
     <main
       className={cn(
-        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4",
+        "grid grid-cols-[repeat(auto-fill,minmax(250px,_1fr))] gap-4",
         className
       )}
       {...props}
