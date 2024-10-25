@@ -33,6 +33,7 @@ const App = ({ url }: { url: string }) => {
     const image = await FabricImage.fromURL(url);
     image.top = canvas.height / 2 - image.height / 2;
     image.left = canvas.width / 2 - image.width / 2;
+    image.fill = "#000000";
     canvas?.add(image);
     canvas?.renderAll();
   };

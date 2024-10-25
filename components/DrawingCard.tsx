@@ -90,7 +90,7 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
         <CardFooter className="pb-4 flex justify-between flex-wrap gap-1">
           <Link
             aria-label="Ver"
-            href={`${drawing.id}`}
+            href={`drawing/${drawing.id}`}
             className={buttonVariants()}
           >
             <FaEye />
