@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
-import { StoreProvider } from "@/components/StoreProvider";
 import { Navbar } from "@/components/Navbar";
 import localFont from "next/font/local";
 import { DEFAULT_COLOR_THEME } from "@/lib/constants";
@@ -39,9 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          <main className="container mx-auto p-5">
-            <StoreProvider>{children}</StoreProvider>
-          </main>
+          <main className="container mx-auto p-5">{children}</main>
         </ThemeProvider>
       </body>
     </html>

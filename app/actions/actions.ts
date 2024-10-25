@@ -1,89 +1,111 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { uploadDrawingToFirebase } from "@/lib/utils";
+import {
+  uploadDrawingToFirebase,
+  deleteDrawingFromFirebase,
+} from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
+import { revalidatePath } from "next/cache";
+import { Drawing } from "@/types";
+import { cache } from "react";
 
-export const getDrawingById = async (id: string) => {
-  try {
-    const drawing = await prisma.drawing.findUnique({
-      where: { id },
-    });
-    if (!drawing) {
-      return { error: "Dibujo no encontrado" };
+export const getDrawingById = cache(
+  async (id: string): Promise<Drawing | undefined> => {
+    try {
+      const drawing = await prisma.drawing.findUnique({
+        where: { id },
+      });
+      if (!drawing) {
+        throw new Error("Dibujo no encontrado");
+      }
+      return drawing;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
+      console.error("Ha ocurrido un error");
     }
-    return drawing;
-  } catch (error) {
-    if (error instanceof Error) {
-      return { error: error.message };
-    }
-    return { error: "Ha ocurrido un error" };
   }
-};
+);
 
-export const getDrawings = async () => {
+export const getDrawings = cache(async (): Promise<Drawing[] | undefined> => {
   try {
-    const drawings = await prisma.drawing.findMany();
+    const drawings: Drawing[] = await prisma.drawing.findMany();
     return drawings;
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      console.error(error.message);
     }
-    return { error: "Ha ocurrido un error" };
+    console.error("Ha ocurrido un error");
   }
-};
+});
 
 export const createDrawing = async (data: {
   id: string;
   title: string;
   description?: string;
   imageUrl: string;
-}) => {
+}): Promise<void> => {
   try {
     if (!data.title || !data.imageUrl) {
-      throw new Error("Title and Image are required");
+      throw new Error("Títlo e imagen son requeridos");
     }
     if (data.id == "") {
-      throw new Error("ID cannot be an empty string");
+      throw new Error("El ID del dibujo no puede ser vacío");
     }
     if (data.id) {
       const existingDrawing = await prisma.drawing.findUnique({
         where: { id: data.id },
       });
       if (existingDrawing) {
-        throw new Error("The provided 'id' already exists");
+        throw new Error("El dibujo con el 'id' dado ya existe");
       }
     }
-    const result = await prisma.drawing.create({
+    await prisma.drawing.create({
       data,
     });
-    return result;
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      console.error(error.message);
     }
-    return { error: "Ha ocurrido un error" };
+    console.error("Ha ocurrido un error");
   }
 };
 
-export const createAndUploadDrawing = async (formData: FormData) => {
+export const createAndUploadDrawing = async (
+  formData: FormData
+): Promise<void> => {
   try {
     const drawingId = uuidv4();
-    uploadDrawingToFirebase(drawingId, formData.get("image") as File);
-    return createDrawing({
+    const existingDrawing = await prisma.drawing.findUnique({
+      where: { id: drawingId },
+    });
+    if (existingDrawing) {
+      throw new Error("El dibujo con el 'id' dado ya existe");
+    }
+    const imageUrl = await uploadDrawingToFirebase(
+      drawingId,
+      formData.get("image") as File
+    );
+    await createDrawing({
       id: drawingId,
       title: formData.get("title") as string,
       description: formData.get("description") as string,
-      imageUrl: formData.get("image") as string,
+      imageUrl,
     });
+    revalidatePath("/");
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      console.error(error.message);
     }
-    return { error: "Ha ocurrido un error" };
+    console.error("Ha ocurrido un error");
   }
 };
 
-export const updatedDrawing = async (drawingId: string, formData: FormData) => {
+export const updateDrawing = async (
+  drawingId: string,
+  formData: FormData
+): Promise<void> => {
   try {
     if (!drawingId) throw new Error("ID cannot be an empty string");
     const drawing = await prisma.drawing.findUnique({
@@ -92,21 +114,26 @@ export const updatedDrawing = async (drawingId: string, formData: FormData) => {
       },
     });
     if (!drawing) throw new Error("Drawing not found to update");
-    return await prisma.drawing.update({
+    const data: Partial<Drawing> = {};
+    formData.forEach((value, key) => {
+      data[key as keyof Drawing] = value as string;
+    });
+    await prisma.drawing.update({
       where: {
         id: drawingId,
       },
-      data: formData,
+      data,
     });
+    revalidatePath("/");
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      console.error(error.message);
     }
-    return { error: "Ha ocurrido un error" };
+    console.error("Ha ocurrido un error");
   }
 };
 
-export const deleteDrawing = async (drawingId: string) => {
+export const deleteDrawing = async (drawingId: string): Promise<void> => {
   try {
     if (!drawingId) throw new Error("ID cannot be an empty string");
     const drawing = await prisma.drawing.findUnique({
@@ -115,15 +142,19 @@ export const deleteDrawing = async (drawingId: string) => {
       },
     });
     if (!drawing) throw new Error("Drawing not found to update");
-    return await prisma.drawing.delete({
-      where: {
-        id: drawingId,
-      },
-    });
+    await Promise.all([
+      prisma.drawing.delete({
+        where: {
+          id: drawingId,
+        },
+      }),
+      deleteDrawingFromFirebase(drawingId),
+    ]);
+    revalidatePath("/");
   } catch (error) {
     if (error instanceof Error) {
-      return { error: error.message };
+      console.error(error.message);
     }
-    return { error: "Ha ocurrido un error" };
+    console.error("Ha ocurrido un error");
   }
 };

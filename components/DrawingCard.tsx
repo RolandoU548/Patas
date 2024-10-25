@@ -22,19 +22,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import React, { useState } from "react";
+import { deleteDrawing } from "@/app/actions";
 import { Button } from "./ui/button";
 import { buttonVariants } from "./ui/button";
-import { useDeleteDrawingMutation } from "@/lib/services/drawingApi";
-import { deleteDrawingFromFirebase } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
 import { FaTrash } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
 
 export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
-  const [pending, setPending] = useState(false);
-  const [deleteDrawing] = useDeleteDrawingMutation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleDownload = async (url: string, name: string) => {
@@ -50,20 +46,6 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(href);
-  };
-
-  const handleDelete = async () => {
-    setPending(true);
-    try {
-      await Promise.all([
-        deleteDrawing(drawing.id),
-        deleteDrawingFromFirebase(drawing.id),
-      ]);
-    } catch (error) {
-      console.error("Error al eliminar el dibujo:", error);
-    } finally {
-      setPending(false);
-    }
   };
 
   return (
@@ -128,39 +110,35 @@ export const DrawingCard = ({ drawing }: { drawing: Drawing }) => {
           >
             <FaDownload />
           </Button>
-          {pending ? (
-            <Button disabled variant={"destructive"}>
-              <Loader2 className="mr-2 animate-spin" />
-            </Button>
-          ) : (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant={"destructive"} aria-label="Borrar">
-                  <FaTrash />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    ¿Estás completamente seguro?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Esta acción no se puede deshacer. Eliminará permanentemente
-                    el dibujo y sus datos.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction
-                    className="bg-destructive text-destructive-foreground"
-                    onClick={handleDelete}
-                  >
-                    Eliminar
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          )}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant={"destructive"} aria-label="Borrar">
+                <FaTrash />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  ¿Estás completamente seguro?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta acción no se puede deshacer. Eliminará permanentemente el
+                  dibujo y sus datos.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-destructive text-destructive-foreground"
+                  onClick={() => {
+                    deleteDrawing(drawing.id);
+                  }}
+                >
+                  Eliminar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </CardFooter>
       </Card>
     </>
