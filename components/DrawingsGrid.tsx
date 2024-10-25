@@ -3,16 +3,7 @@ import { DrawingCard } from "@/components/DrawingCard";
 import { cn } from "@/lib/utils";
 import { useGetDrawingsQuery } from "@/lib/services/drawingApi";
 import Loading from "@/app/loading";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import ErrorComponent from "@/app/error";
 
 interface DrawingsGridProps extends React.HTMLProps<HTMLElement> {
   className?: string;
@@ -36,23 +27,7 @@ export const DrawingsGrid = ({
 
   if (error)
     return (
-      <AlertDialog defaultOpen>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>¡Oops! Ha ocurrido un error</AlertDialogTitle>
-            <AlertDialogDescription>
-              Ha ocurrido un error al recuperar los dibujos. Por favor inténtalo
-              de nuevo.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={() => location.reload()}>
-              Intentar de nuevo
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ErrorComponent description="Ha ocurrido un error al recuperar los dibujos. Por favor inténtalo de nuevo." />
     );
 
   if (drawings)
