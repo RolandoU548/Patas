@@ -16,6 +16,16 @@ import {
 } from "@/components/edit/SnappingHelpers";
 import { uploadDrawingToFirebase } from "@/lib/utils";
 import { Drawing } from "@prisma/client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { FaCheckCircle } from "react-icons/fa";
 
 const canvasWidth = DEFAULT_CANVAS_WIDTH;
 const canvasHeight = DEFAULT_CANVAS_HEIGHT;
@@ -31,6 +41,7 @@ const ellipseHeight = 100;
 
 const App = ({ drawing }: { drawing: Drawing }) => {
   const canvasRef = useRef(null);
+  const [drawingSaved, setDrawingSaved] = useState(false);
   const [canvas, setCanvas] = useState<Canvas | null>(null);
 
   const addImage = async (canvas: Canvas, url: string) => {
@@ -138,6 +149,7 @@ const App = ({ drawing }: { drawing: Drawing }) => {
       drawing.id,
       new File([u8arr], drawing.title, { type: mime })
     );
+    setDrawingSaved(true);
   };
 
   return (
@@ -174,7 +186,7 @@ const App = ({ drawing }: { drawing: Drawing }) => {
       <ShapeOptions canvas={canvas} />
 
       <div className="mt-2 flex flex-col gap-2 items-center">
-        <Label htmlFor="image">Agrega una imagen</Label>
+        <Label htmlFor="image">Agregar una imagen</Label>
         <Input
           className=""
           onChange={(e) => {
@@ -191,7 +203,30 @@ const App = ({ drawing }: { drawing: Drawing }) => {
           accept="image/png, image/jpeg, image/gif"
         />
       </div>
-      <Button onClick={saveDrawing}>Guardar</Button>
+      <Button className="mt-2" onClick={saveDrawing}>
+        Guardar
+      </Button>
+      <AlertDialog open={drawingSaved}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-center">
+              El dibujo se ha guardado correctamente
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              <FaCheckCircle className="mt-2 mb-0 m-auto text-4xl text-primary" />
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => {
+                setDrawingSaved(false);
+              }}
+            >
+              Continuar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
   );
 };
