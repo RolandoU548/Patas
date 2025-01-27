@@ -11,7 +11,6 @@ export default async function App({ params }: { params: { id: string } }) {
         <ErrorComponent description="Ha ocurrido un error al editar el dibujo" />
       );
     }
-    if (drawing.imageUrl)
-      return <CanvasComponent url={drawing.imageUrl}></CanvasComponent>;
+    return <CanvasComponent drawing={drawing}></CanvasComponent>;
   }
 }

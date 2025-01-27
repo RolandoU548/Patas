@@ -18,3 +18,10 @@ export const DEFAULT_CANVAS_COLOR: Hex = "#ffffff";
 export const DEFAULT_CANVAS_HEIGHT = 400;
 export const DEFAULT_CANVAS_WIDTH = 450;
 export const DEFAULT_SHAPES_COLOR: Hex = "#000000";
+export const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+];
