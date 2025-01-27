@@ -121,6 +121,25 @@ const App = ({ drawing }: { drawing: Drawing }) => {
     },
   ];
 
+  const saveDrawing = () => {
+    const dataUrl = canvas?.toDataURL({ format: "png", multiplier: 1 });
+    if (dataUrl === null || dataUrl == undefined) return;
+    const arr = dataUrl.split(",");
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : "";
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    uploadDrawingToFirebase(
+      drawing.id,
+      new File([u8arr], drawing.title, { type: mime })
+    );
+  };
+
   return (
     <main className="flex flex-col items-center">
       <aside className="text-primary-foreground flex flex-col p-1 gap-1 fixed top-1/2 left-4 -translate-y-1/2 rounded-md bg-primary z-30">
@@ -172,28 +191,7 @@ const App = ({ drawing }: { drawing: Drawing }) => {
           accept="image/png, image/jpeg, image/gif"
         />
       </div>
-      <Button
-        onClick={() => {
-          const dataUrl = canvas?.toDataURL({ format: "png", multiplier: 1 });
-          if (dataUrl === null || dataUrl == undefined) return;
-          const arr = dataUrl.split(",");
-          const mimeMatch = arr[0].match(/:(.*?);/);
-          const mime = mimeMatch ? mimeMatch[1] : "";
-          const bstr = atob(arr[1]);
-          let n = bstr.length;
-          const u8arr = new Uint8Array(n);
-
-          while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-          }
-          uploadDrawingToFirebase(
-            drawing.id,
-            new File([u8arr], drawing.title, { type: mime })
-          );
-        }}
-      >
-        Guardar
-      </Button>
+      <Button onClick={saveDrawing}>Guardar</Button>
     </main>
   );
 };
